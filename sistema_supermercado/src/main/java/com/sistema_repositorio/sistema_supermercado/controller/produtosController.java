@@ -28,7 +28,7 @@ public class produtosController {
     private produtoRepository produtoRepository;
 
     @GetMapping
-    public ResponseEntity<Object> listarProdutos() {
+    public ResponseEntity<Object> listarClientes() {
         return ResponseEntity.status(HttpStatus.OK).body(this.produtoRepository.findAll());
     }
     @PostMapping
@@ -42,9 +42,8 @@ public class produtosController {
 
         if (p.isPresent()) {
             this.produtoRepository.delete(p.get());
-            return ResponseEntity.status(HttpStatus.OK).body("Produto" + p.get().getNome() +""+ " excluido com sucesso.");
+            return ResponseEntity.status(HttpStatus.OK).body("Produto " + p.get().getNome() +""+ " excluido com sucesso.");
         }
-
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Produto não encontrado na base de dados");
     }
     
