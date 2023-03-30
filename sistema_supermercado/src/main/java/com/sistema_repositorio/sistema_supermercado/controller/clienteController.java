@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -20,9 +21,12 @@ import com.sistema_repositorio.sistema_supermercado.model.Cliente;
 import com.sistema_repositorio.sistema_supermercado.repository.clienteRepository;
 import com.sistema_repositorio.sistema_supermercado.sequenceMongodb.sequenceGeneratorService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/clientes")
 
+@Validated
 public class clienteController {
 
     @Autowired
@@ -37,7 +41,7 @@ public class clienteController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> adicionarCliente(@RequestBody Cliente c) {
+    public ResponseEntity<Object> adicionarCliente(@Valid @RequestBody Cliente c) {
         c.setId(sequenceGeneratorService.generateSequence(Cliente.SEQUENCE_NAME));
         return ResponseEntity.status(HttpStatus.CREATED).body(this.clienteRepository.save(c));
     }
@@ -55,7 +59,7 @@ public class clienteController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Object> atualizarEmail(@PathVariable long id, @RequestBody Cliente c) {
+    public ResponseEntity<Object> atualizarEmail(@Valid @PathVariable long id, @RequestBody Cliente c) {
         Optional<Cliente> clienteEncontrado = this.clienteRepository.findById(id);
 
         if (clienteEncontrado.isPresent()) {
@@ -69,7 +73,7 @@ public class clienteController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> atualizarCliente(@PathVariable long id, @RequestBody Cliente c) {
+    public ResponseEntity<Object> atualizarCliente(@Valid @PathVariable long id, @RequestBody Cliente c) {
 
         Optional<Cliente> clienteEncontrado = this.clienteRepository.findById(id);
         if (clienteEncontrado.isPresent()) {
