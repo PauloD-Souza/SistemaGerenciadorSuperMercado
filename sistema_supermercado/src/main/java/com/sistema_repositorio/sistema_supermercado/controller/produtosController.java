@@ -2,7 +2,6 @@ package com.sistema_repositorio.sistema_supermercado.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,7 +28,7 @@ public class produtosController {
     private produtoRepository produtoRepository;
 
     @GetMapping
-    public ResponseEntity<Object> listarClientes() {
+    public ResponseEntity<Object> listarProdutos() {
         return ResponseEntity.status(HttpStatus.OK).body(this.produtoRepository.findAll());
     }
     @PostMapping
@@ -53,5 +52,8 @@ public class produtosController {
         Optional <produto> produtoEncontrado = this.produtoRepository.findById(id);
         return ResponseEntity.status(HttpStatus.OK).body(produtoEncontrado);
     }
+
+    
+
     
 }
