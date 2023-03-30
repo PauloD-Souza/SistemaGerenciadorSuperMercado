@@ -20,9 +20,6 @@ import com.sistema_repositorio.sistema_supermercado.model.Cliente;
 import com.sistema_repositorio.sistema_supermercado.repository.clienteRepository;
 import com.sistema_repositorio.sistema_supermercado.sequenceMongodb.sequenceGeneratorService;
 
-
-
-
 @RestController
 @RequestMapping("/clientes")
 
@@ -30,27 +27,26 @@ public class clienteController {
 
     @Autowired
     private sequenceGeneratorService sequenceGeneratorService;
-    
 
     @Autowired
     private clienteRepository clienteRepository;
 
     @GetMapping
-    public ResponseEntity<Object> listarClientes (){
+    public ResponseEntity<Object> listarClientes() {
         return ResponseEntity.status(HttpStatus.OK).body(this.clienteRepository.findAll());
     }
 
     @PostMapping
-    public ResponseEntity<Object> adicionarCliente(@RequestBody Cliente c){
+    public ResponseEntity<Object> adicionarCliente(@RequestBody Cliente c) {
         c.setId(sequenceGeneratorService.generateSequence(Cliente.SEQUENCE_NAME));
         return ResponseEntity.status(HttpStatus.CREATED).body(this.clienteRepository.save(c));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deletarCliente (@PathVariable long id){
-        Optional <Cliente> c = this.clienteRepository.findById(id);
+    public ResponseEntity<Object> deletarCliente(@PathVariable long id) {
+        Optional<Cliente> c = this.clienteRepository.findById(id);
 
-        if(c.isPresent()){
+        if (c.isPresent()) {
             this.clienteRepository.delete(c.get());
             return ResponseEntity.status(HttpStatus.OK).body("Cliente " + c.get().getNome() + " excluido com sucesso.");
         }
@@ -59,55 +55,61 @@ public class clienteController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Object> atualizarEmail (@PathVariable long id, @RequestBody Cliente c){
-        Optional <Cliente> clienteEncontrado = this.clienteRepository.findById(id);
+    public ResponseEntity<Object> atualizarEmail(@PathVariable long id, @RequestBody Cliente c) {
+        Optional<Cliente> clienteEncontrado = this.clienteRepository.findById(id);
 
-        if(clienteEncontrado.isPresent()){
+        if (clienteEncontrado.isPresent()) {
             clienteEncontrado.get().setEmail(c.getEmail());
             this.clienteRepository.save(clienteEncontrado.get());
-            return ResponseEntity.status(HttpStatus.OK).body("o cliente " + clienteEncontrado.get().getNome() + " teve seu email atualizado para " + clienteEncontrado.get().getEmail());
+            return ResponseEntity.status(HttpStatus.OK).body("o cliente " + clienteEncontrado.get().getNome()
+                    + " teve seu email atualizado para " + clienteEncontrado.get().getEmail());
         }
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente não encontrado na base de dados");
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> atualizarCliente (@PathVariable long id, @RequestBody Cliente c){
-            
-        Optional <Cliente> clienteEncontrado = this.clienteRepository.findById(id);
-        if(clienteEncontrado.isPresent()){
+    public ResponseEntity<Object> atualizarCliente(@PathVariable long id, @RequestBody Cliente c) {
+
+        Optional<Cliente> clienteEncontrado = this.clienteRepository.findById(id);
+        if (clienteEncontrado.isPresent()) {
             clienteEncontrado.get().setCpf(c.getCpf());
             clienteEncontrado.get().setEmail(c.getEmail());
             clienteEncontrado.get().setNome(c.getNome());
             this.clienteRepository.save(clienteEncontrado.get());
-            return ResponseEntity.status(HttpStatus.OK).body("Novos dados do cliente: " +clienteEncontrado.get().toString());
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body("Novos dados do cliente: " + clienteEncontrado.get().toString());
         }
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("ID do cliente não encontrado em nosso banco de dados.\nID: " + id);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body("ID do cliente não encontrado em nosso banco de dados.\nID: " + id);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object> buscarClientePorId (@PathVariable long id){
+    public ResponseEntity<Object> buscarClientePorId(@PathVariable long id) {
 
-        Optional <Cliente> clienteEncontrado = this.clienteRepository.findById(id);
+        Optional<Cliente> clienteEncontrado = this.clienteRepository.findById(id);
 
-        if(clienteEncontrado.isPresent()){
+        if (clienteEncontrado.isPresent()) {
             return ResponseEntity.status(HttpStatus.OK).body(this.clienteRepository.findById(id));
         }
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("ID do cliente não encontrado no banco de dados\nID: " + id);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body("ID do cliente não encontrado no banco de dados\nID: " + id);
     }
 
     @GetMapping("/cpf")
-    public ResponseEntity <Object> buscarCliente (@RequestParam(value = "searchCpf", required = true) String cpf){
+    public ResponseEntity<Object> buscarCliente(@RequestParam(value = "searchCpf", required = true) String cpf) {
         Cliente clienteEncontrado = null;
-        for(Cliente c: this.clienteRepository.findAll()){
-            if(c.getCpf().equals(cpf)){
+        for (Cliente c : this.clienteRepository.findAll()) {
+            if (c.getCpf().equals(cpf)) {
                 clienteEncontrado = c;
                 return ResponseEntity.status(HttpStatus.OK).body(clienteEncontrado);
-        }
+            }
 
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nenhum cliente informado com o parametro informado");
     }
-    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nenhum cliente informado com o parametro informado");
 }
-}
+
+
