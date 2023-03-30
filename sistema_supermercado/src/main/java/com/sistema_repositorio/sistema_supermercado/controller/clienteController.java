@@ -1,6 +1,9 @@
 package com.sistema_repositorio.sistema_supermercado.controller;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -103,7 +106,7 @@ public class clienteController {
     }
 
     @GetMapping("/cpf")
-    public ResponseEntity<Object> buscarCliente(@RequestParam(value = "searchCpf", required = true) String cpf) {
+    public ResponseEntity<Object> buscarClientePorCPF(@RequestParam(value = "searchCpf", required = true) String cpf) {
         Cliente clienteEncontrado = null;
         for (Cliente c : this.clienteRepository.findAll()) {
             if (c.getCpf().equals(cpf)) {
@@ -113,6 +116,33 @@ public class clienteController {
 
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nenhum cliente informado com o parametro informado");
+    }
+
+    @GetMapping("/nome")
+    public ResponseEntity<Object> buscarClientePorNome(@RequestParam(value = "searchNome", required = true) String nome) {
+        List<Cliente> clientesEncontrados = new ArrayList<>();
+
+        for(Cliente c : this.clienteRepository.findAll()){
+            if(containsIgnoreCase(c.getNome(), nome)){
+                clientesEncontrados.add(c);
+            }
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(clientesEncontrados);
+    }
+
+    public static boolean containsIgnoreCase(String str, String searchStr) {
+        if (str == null || searchStr == null) {
+            return false;
+        }
+        int len = searchStr.length();
+        int max = str.length() - len;
+        for (int i = 0; i <= max; i++) {
+            if (str.regionMatches(true, i, searchStr, 0, len)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     
