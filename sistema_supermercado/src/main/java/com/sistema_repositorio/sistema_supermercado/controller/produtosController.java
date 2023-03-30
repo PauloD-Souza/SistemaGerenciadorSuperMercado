@@ -2,6 +2,7 @@ package com.sistema_repositorio.sistema_supermercado.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -45,6 +46,12 @@ public class produtosController {
             return ResponseEntity.status(HttpStatus.OK).body("Produto " + p.get().getNome() +""+ " excluido com sucesso.");
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Produto não encontrado na base de dados");
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Object> listarProdutoPorId(@PathVariable long id){
+        Optional <produto> produtoEncontrado = this.produtoRepository.findById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(produtoEncontrado);
     }
     
 }
