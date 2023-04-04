@@ -53,8 +53,4 @@ public class produtosController {
         return ResponseEntity.status(HttpStatus.OK).body(produtoEncontrado);
     }
 
-    
-    
-
-    
 }

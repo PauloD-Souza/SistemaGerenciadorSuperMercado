@@ -62,7 +62,7 @@ public class clienteController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Object> atualizarEmail(@Valid @PathVariable long id, @RequestBody Cliente c) {
+    public ResponseEntity<Object> corrigirCliente(@Valid @PathVariable long id, @RequestBody Cliente c) {
         Optional<Cliente> clienteEncontrado = this.clienteRepository.findById(id);
 
         if (clienteEncontrado.isPresent()) {
