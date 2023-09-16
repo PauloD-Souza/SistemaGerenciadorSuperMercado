@@ -20,9 +20,9 @@ public class SecurityConfig {
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth
             .inMemoryAuthentication()
-                .withUser("admin").password("password").roles("ADMIN")
+                .withUser("paulo").password("$2a$10$cZyg4RdSISw5tzAHtt/Ru.QWQcKFIQPYU76z9KxUBtHrBQ4GarGMS").roles("ADMIN")
                 .and()
-                .withUser("user").password("password").roles("USER");
+                .withUser("user").password("$2a$10$cZyg4RdSISw5tzAHtt/Ru.QWQcKFIQPYU76z9KxUBtHrBQ4GarGMS").roles("USER");
     }
 
     @Bean
@@ -38,7 +38,7 @@ public class SecurityConfig {
             
                 if ("admin".equals(username)) {
                     return User.withUsername("admin")
-                            .password("password")
+                            .password("$2a$10$cZyg4RdSISw5tzAHtt/Ru.QWQcKFIQPYU76z9KxUBtHrBQ4GarGMS")
                             .roles("ADMIN")
                             .build();
                 } else if ("user".equals(username)) {
