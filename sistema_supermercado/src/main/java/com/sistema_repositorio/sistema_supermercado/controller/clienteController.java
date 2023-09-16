@@ -8,6 +8,10 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,8 +23,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.Authentication;
+
 
 import com.sistema_repositorio.sistema_supermercado.model.Cliente;
+import com.sistema_repositorio.sistema_supermercado.model.ErroResponse;
 import com.sistema_repositorio.sistema_supermercado.repository.clienteRepository;
 import com.sistema_repositorio.sistema_supermercado.sequenceMongodb.sequenceGeneratorService;
 
@@ -38,9 +45,26 @@ public class clienteController {
     @Autowired
     private clienteRepository clienteRepository;
 
-    @GetMapping
+    @GetMapping("/clientes")
+    @Secured("ROLE_ADMIN") // Requer que o usuário tenha a role "ADMIN
     public ResponseEntity<Object> listarClientes() {
-        return ResponseEntity.status(HttpStatus.OK).body(this.clienteRepository.findAll());
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        
+        if (authentication == null || !authentication.isAuthenticated()) {
+            // O usuário não está autenticado, retorne uma mensagem de erro com status 401 (Unauthorized)
+            ErroResponse erroResponse = new ErroResponse("Usuário não autenticado");
+            throw new AccessDeniedException("Usuário não autenticado");
+        }else{
+        
+        List<Cliente> clientes = this.clienteRepository.findAll();
+        
+        if (!clientes.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.OK).body(clientes);
+        } else {
+            // Se a lista de clientes estiver vazia, retorne uma mensagem de erro com status 404 (Not Found)
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nenhum cliente encontrado");
+        }
+    }
     }
 
     @PostMapping
@@ -115,7 +139,8 @@ public class clienteController {
             }
 
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nenhum cliente informado com o parametro informado");
+        ErroResponse erroResponse = new ErroResponse("Nenhum cliente encontrado com as informações fonecidas");
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(erroResponse);
     }
 
     @GetMapping("/nome")
