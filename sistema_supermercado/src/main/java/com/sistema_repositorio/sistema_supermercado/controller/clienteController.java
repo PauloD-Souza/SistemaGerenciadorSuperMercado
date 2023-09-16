@@ -44,18 +44,10 @@ public class clienteController {
 
     @Autowired
     private clienteRepository clienteRepository;
-
-    @GetMapping("/clientes")
-    @Secured("ROLE_ADMIN") // Requer que o usuário tenha a role "ADMIN
+    
+    @GetMapping
     public ResponseEntity<Object> listarClientes() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        
-        if (authentication == null || !authentication.isAuthenticated()) {
-            // O usuário não está autenticado, retorne uma mensagem de erro com status 401 (Unauthorized)
-            ErroResponse erroResponse = new ErroResponse("Usuário não autenticado");
-            throw new AccessDeniedException("Usuário não autenticado");
-        }else{
-        
+    
         List<Cliente> clientes = this.clienteRepository.findAll();
         
         if (!clientes.isEmpty()) {
@@ -64,7 +56,6 @@ public class clienteController {
             // Se a lista de clientes estiver vazia, retorne uma mensagem de erro com status 404 (Not Found)
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nenhum cliente encontrado");
         }
-    }
     }
 
     @PostMapping
