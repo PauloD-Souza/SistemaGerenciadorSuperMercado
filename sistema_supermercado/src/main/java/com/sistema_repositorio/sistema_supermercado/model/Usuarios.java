@@ -34,7 +34,6 @@ public class Usuarios implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
-     @JsonFormat(pattern = "dd/MM/yyyy", locale = "pt-BR", timezone = "UTC")
     private LocalDate lastLoginDate;
 
 

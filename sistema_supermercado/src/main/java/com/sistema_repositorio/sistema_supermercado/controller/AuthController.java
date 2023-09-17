@@ -39,7 +39,7 @@ public class AuthController {
             Usuarios usuario = usuarioOptional.get();
             ResponseOk response = new ResponseOk ("Login bem-sucedido");
             ErroResponse erroResponse = new ErroResponse("Senha Incorreta");
-
+            
             // Verifique se a senha fornecida corresponde à senha armazenada
             if (usuario.getPassword().equals(password)) {
                 LocalDate currentDate = LocalDate.now();
@@ -50,7 +50,9 @@ public class AuthController {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(erroResponse);
             }
         } else {
-            return ResponseEntity.status(HttpStatus.OK).body("Usuario Inexistente");
+            ErroResponse erroResponses = new ErroResponse("Usuario Inexistente");
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erroResponses);
         }
     }
         

@@ -43,8 +43,7 @@ public class UsuariosController {
             MongoDatabase database = mongoClient.getDatabase("gerenciadorSupermercado");
             MongoCollection<Document> collection = database.getCollection("usuarios");
 
-            Document query = collection.find().first(); // Você pode adicionar um critério de consulta aqui se
-            // necessário
+            Document query = collection.find().first(); 
             if (query != null) {
                 Object campo = query.get("username");
                 if (usuario.getUsername().equals(campo)) {
