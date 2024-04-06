@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.sistema_repositorio.sistema_supermercado.model.ErroResponse;
 import com.sistema_repositorio.sistema_supermercado.model.ResponseOk;
-import com.sistema_repositorio.sistema_supermercado.model.produto;
-import com.sistema_repositorio.sistema_supermercado.repository.produtoRepository;
+import com.sistema_repositorio.sistema_supermercado.model.Produto;
+import com.sistema_repositorio.sistema_supermercado.repository.ProdutoRepository;
 import com.sistema_repositorio.sistema_supermercado.sequenceMongodb.sequenceGenerator;
 import jakarta.validation.Valid;
 
@@ -29,9 +29,9 @@ import jakarta.validation.Valid;
 public class ProdutosController {
     
     @Autowired
-    private produtoRepository produtoRepository;
+    private ProdutoRepository produtoRepository;
 
-    public ProdutosController (produtoRepository produtoRepository){
+    public ProdutosController (ProdutoRepository produtoRepository){
         this.produtoRepository = produtoRepository;
     }
 
@@ -46,13 +46,13 @@ public class ProdutosController {
         }
     }
     @PostMapping
-    public ResponseEntity<Object> adicionarProduto(@Valid @RequestBody produto p) {
-        p.setId(sequenceGenerator.generateSequence(produto.SEQUENCE_NAME));
+    public ResponseEntity<Object> adicionarProduto(@Valid @RequestBody Produto p) {
+        p.setId(sequenceGenerator.generateSequence(Produto.SEQUENCE_NAME));
         return ResponseEntity.status(HttpStatus.CREATED).body(this.produtoRepository.save(p));
     }
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deletarProduto(@PathVariable long id) {
-        Optional<produto> p = this.produtoRepository.findById(id);
+        Optional<Produto> p = this.produtoRepository.findById(id);
         ResponseOk responseOk = new ResponseOk("Produto " + p.get().getNome() +""+ " excluido com sucesso.");
         if (p.isPresent()) {
             this.produtoRepository.delete(p.get());
@@ -64,7 +64,7 @@ public class ProdutosController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Object> listarProdutoPorId(@PathVariable long id){
-        Optional <produto> produtoEncontrado = this.produtoRepository.findById(id);
+        Optional <Produto> produtoEncontrado = this.produtoRepository.findById(id);
         ErroResponse erroResponse = new ErroResponse("Produto não encontrado");
         if (!produtoEncontrado.isPresent()){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erroResponse);
@@ -73,8 +73,8 @@ public class ProdutosController {
     }
      @GetMapping("/nome")
     public ResponseEntity<Object> listarProdutoPorNome(@RequestParam(value = "searchNome", required = true) String nome) {
-        List<produto> produtosEncontrados = new ArrayList<>();
-        for(produto p : this.produtoRepository.findAll()){
+        List<Produto> produtosEncontrados = new ArrayList<>();
+        for(Produto p : this.produtoRepository.findAll()){
             if(containsIgnoreCase(p.getNome(), nome)){
                 produtosEncontrados.add(p);
             }

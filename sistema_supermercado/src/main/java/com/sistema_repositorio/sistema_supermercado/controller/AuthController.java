@@ -32,7 +32,6 @@ public class AuthController {
     public ResponseEntity<Object> login(@RequestBody Map<String, String> loginData) {
     String username = loginData.get("username");
     String password = loginData.get("password");
-    // Verifique se o usuário com o nome de usuário especificado existe
         Optional<Usuarios> usuarioOptional = usuariosRepository.findByUsername(username);
 
         if (usuarioOptional.isPresent()) {
@@ -40,7 +39,7 @@ public class AuthController {
             ResponseOk response = new ResponseOk ("Login bem-sucedido");
             ErroResponse erroResponse = new ErroResponse("Senha Incorreta");
             
-            // Verifique se a senha fornecida corresponde à senha armazenada
+           
             if (usuario.getPassword().equals(password)) {
                 LocalDate currentDate = LocalDate.now();
                 usuario.setLastLoginDate(currentDate);

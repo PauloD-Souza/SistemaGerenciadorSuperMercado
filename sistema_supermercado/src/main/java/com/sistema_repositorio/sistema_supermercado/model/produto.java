@@ -9,8 +9,8 @@ import lombok.Data;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 @Data
-@Document(collection = "produtos")
-public class produto {
+@Document(collection = "Produtos")
+public class Produto {
 
     @Transient
     public static final String SEQUENCE_NAME = "products_sequence";
@@ -24,5 +24,9 @@ public class produto {
     private String Descricao;
 
     private BigDecimal price;
+    
+    public BigDecimal getPrice() {
+        return price;
+    }
     
 }
